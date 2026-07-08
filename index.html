@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
 <style>
   :root{ --night:#0F1E15; --paper:#EAE4CC; --gold:#C8972F; --muted:#b9b39c; }
   html,body{ height:100%; }
@@ -17,6 +17,8 @@
     display:grid; place-items:center; min-height:100vh; text-align:center; padding:24px;
   }
   .mark{ width:min(420px,80vw); height:auto; display:block; margin:0 auto; }
+  .tagline{ margin:16px 0 0; font-size:clamp(19px,3.4vw,28px); font-weight:400; letter-spacing:.01em; }
+  .tagline .accent{ font-family:"Great Vibes",cursive; color:var(--gold); font-size:1.4em; line-height:1; }
   .rule{ width:48px; height:2px; background:var(--gold); margin:20px auto; opacity:.85; }
   .note{ font-size:14px; color:var(--muted); letter-spacing:.02em; font-family:system-ui,sans-serif; }
 </style>
@@ -24,6 +26,7 @@
 <body>
   <main>
     <img class="mark" src="Fledgewright_wordmark_pine_reversed.svg" alt="Fledgewright" width="915" height="181">
+    <p class="tagline">Apps That Build <span class="accent">You</span></p>
     <div class="rule"></div>
     <div class="note">Site in progress.</div>
   </main>
