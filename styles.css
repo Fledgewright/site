@@ -143,7 +143,28 @@ h1 .you{
   .app-block--one::before{opacity:.07}
   .app-block--two::before{opacity:.16} /* pale gold needs more presence on paper */
 }
-.hero .bird{justify-self:end; width:clamp(140px,24vw,300px); height:auto}
+.hero-art{position:relative; justify-self:end; width:clamp(240px,38vw,480px); aspect-ratio:1638/1024}
+.hero-art img{position:absolute; right:0; top:0; height:100%; width:auto}
+.hero-art svg{position:absolute; inset:0; width:100%; height:100%; opacity:.45}
+
+/* Wind lines drift, desynchronized, so the air feels alive behind the still bird.
+   The bird (img) never moves. Frozen for prefers-reduced-motion by the global guard,
+   and held static behind the mobile hero headline (see the max-width:720px block). */
+.hero-art svg path,
+.contact-art svg path{
+  transform-box:fill-box; transform-origin:center;
+  animation:windSway 9s ease-in-out infinite;
+}
+.hero-art svg path:nth-child(1),
+.contact-art svg path:nth-child(1){animation-duration:7s; animation-delay:-1s}
+.hero-art svg path:nth-child(2),
+.contact-art svg path:nth-child(2){animation-duration:9.5s; animation-delay:-4s}
+.hero-art svg path:nth-child(3),
+.contact-art svg path:nth-child(3){animation-duration:11s; animation-delay:-2.5s}
+@keyframes windSway{
+  0%,100%{transform:translate(0,0) skewX(0deg)}
+  50%{transform:translate(38px,-16px) skewX(3.8deg)}
+}
 
 .lead{
   max-width:44rem; font-size:clamp(1.1rem,1.6vw,1.3rem); line-height:1.7;
@@ -220,7 +241,12 @@ h1 .you{
   .brand img{height:64px; top:0; margin-bottom:-14px}
   .head-in nav{flex-wrap:wrap; gap:1rem 1.2rem; padding-bottom:.9rem}
   .head-in nav a{font-size:.85rem}
-  .hero{grid-template-columns:1fr; padding-top:3.5rem}
-  .hero .bird{order:-1; justify-self:start; width:96px}
+  .hero{grid-template-columns:1fr; padding-top:3.5rem; position:relative; isolation:isolate}
+  .hero-art{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(440px,96vw); opacity:.15; z-index:-1;
+  }
+  .hero-art svg{opacity:1} /* the layer opacity carries the dimming on mobile */
+  .hero-art svg path{animation:none} /* no motion behind the mobile headline */
   .duo{grid-template-columns:1fr}
 }
