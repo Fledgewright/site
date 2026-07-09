@@ -1,0 +1,226 @@
+/* Fledgewright — shared site styles. Pine & Tobacco palette. */
+
+@font-face{
+  font-family:'Newsreader';font-style:normal;font-weight:400 700;font-display:swap;
+  src:url('/assets/fonts/newsreader-latin-var.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Newsreader';font-style:italic;font-weight:400 700;font-display:swap;
+  src:url('/assets/fonts/newsreader-italic-latin-var.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Hanken Grotesk';font-style:normal;font-weight:400 700;font-display:swap;
+  src:url('/assets/fonts/hanken-grotesk-latin-var.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Great Vibes';font-style:normal;font-weight:400;font-display:swap;
+  src:url('/assets/fonts/great-vibes-latin.woff2') format('woff2');
+}
+
+:root{
+  --night:#0F1E15; --paper:#EAE4CC; --gold:#C8972F; --ink:#1A2E20;
+  --moss:#43542F; --muted:#49563F;
+  /* dark is the site's home key */
+  --bg:var(--night); --tx:var(--paper);
+  --soft:rgba(234,228,204,.66); --line:rgba(234,228,204,.18);
+  --accent:var(--gold);
+  /* gold for display text; deepened on paper so large text clears 3:1 */
+  --gold-display:var(--gold);
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:var(--paper); --tx:var(--ink);
+    --soft:rgba(26,46,32,.74); --line:rgba(26,46,32,.22);
+    --accent:var(--moss);
+    --gold-display:#A2761C;
+  }
+  .only-dark{display:none !important}
+}
+@media (prefers-color-scheme: dark){
+  .only-light{display:none !important}
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none !important; animation:none !important}
+}
+.skip-link{
+  position:absolute; left:-9999px; z-index:10;
+  background:var(--bg); color:var(--tx);
+  padding:.6rem 1.1rem; border:1px solid var(--line); text-decoration:none;
+}
+.skip-link:focus{position:fixed; left:1rem; top:1rem}
+body{
+  background:var(--bg); color:var(--tx);
+  font-family:'Hanken Grotesk',system-ui,sans-serif;
+  font-size:1.0625rem; line-height:1.75;
+  display:flex; flex-direction:column; min-height:100vh;
+}
+main{flex:1}
+a{color:inherit; text-decoration-color:var(--accent); text-decoration-thickness:1.5px; text-underline-offset:3px}
+a:hover{color:var(--accent)}
+img{max-width:100%}
+
+.wrap{max-width:72rem; margin:0 auto; padding-inline:clamp(1.25rem,4vw,3rem)}
+
+/* Header: oversized wordmark fills the band, g-tails dangle over the rule */
+.site-header{border-bottom:1px solid var(--line)}
+.head-in{
+  display:flex; align-items:flex-start; justify-content:space-between;
+  height:5.5rem; position:relative;
+}
+.brand{display:block; line-height:0}
+.brand img{
+  height:106px; width:auto; position:relative; top:6px;
+}
+/* Inner pages: the wordmark rests until you reach for home */
+body.inner .brand img{opacity:.45; transition:opacity .25s ease}
+body.inner .brand:hover img, body.inner .brand:focus-visible img{opacity:1}
+.head-in nav{
+  display:flex; gap:clamp(1rem,2.5vw,2.2rem);
+  align-self:center;
+}
+.head-in nav a{font-size:.9rem; text-decoration:none; color:var(--soft)}
+.head-in nav a:hover,.head-in nav a[aria-current="page"]{color:var(--accent)}
+
+/* Hero */
+.hero{
+  display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);
+  gap:2rem; align-items:center;
+  padding-top:clamp(4rem,12vh,8rem); padding-bottom:clamp(3rem,8vh,5.5rem);
+}
+h1{
+  font-family:'Newsreader',serif; font-optical-sizing:auto; font-weight:420;
+  font-size:clamp(2.5rem,6vw,4.6rem); line-height:1.12; letter-spacing:-.015em;
+  text-wrap:balance;
+}
+h1 .you{
+  font-family:'Great Vibes',cursive; font-weight:400; color:var(--gold-display);
+  font-size:1.4em; line-height:0; letter-spacing:0;
+}
+
+/* Inner pages */
+.page-head{padding-top:clamp(3.5rem,9vh,6rem)}
+.page-title{font-size:clamp(2.3rem,4.8vw,3.6rem); line-height:1.14}
+.intro-stanzas{padding-top:clamp(2.5rem,6vh,4rem); padding-bottom:clamp(1.5rem,4vh,2.5rem)}
+.stanza{
+  font-family:'Newsreader',serif; font-optical-sizing:auto;
+  font-size:clamp(1.2rem,1.9vw,1.5rem); line-height:1.65;
+  max-width:40rem; margin-bottom:1.8rem;
+}
+.stanza:last-child{margin-bottom:0}
+.prose{max-width:44rem; padding-top:clamp(2rem,5vh,3rem); padding-bottom:clamp(4rem,10vh,6rem)}
+.prose p{margin-bottom:1.6rem}
+.prose p:last-child{margin-bottom:0}
+.prose--tight{padding-bottom:clamp(1.5rem,4vh,2.5rem)}
+.section-title{
+  font-family:'Newsreader',serif; font-optical-sizing:auto; font-weight:500;
+  font-size:clamp(1.6rem,2.8vw,2.1rem); line-height:1.2;
+  margin-top:clamp(2rem,5vh,3rem);
+}
+.hairline{border:none; height:1px; width:70%; background:var(--line); margin:3rem auto}
+
+/* Faint app-icon watermarks behind the two app write-ups */
+.app-block{position:relative}
+.app-block p{position:relative}
+.app-block::before{
+  content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:266px; height:266px;
+  background-position:center; background-size:contain; background-repeat:no-repeat;
+  opacity:.06; pointer-events:none;
+}
+.app-block--one::before{
+  background-image:url('/assets/img/app-teaser-1.png');
+  left:clamp(133px, 75%, calc(100% - 133px)); /* right half of the column, clamped so it never leaves it */
+}
+.app-block--two::before{
+  background-image:url('/assets/img/app-teaser-2.png');
+  left:clamp(133px, 25%, calc(100% - 133px)); /* left half of the column */
+}
+@media (prefers-color-scheme: light){
+  .app-block--one::before{opacity:.07}
+  .app-block--two::before{opacity:.16} /* pale gold needs more presence on paper */
+}
+.hero .bird{justify-self:end; width:clamp(140px,24vw,300px); height:auto}
+
+.lead{
+  max-width:44rem; font-size:clamp(1.1rem,1.6vw,1.3rem); line-height:1.7;
+  padding-bottom:clamp(3rem,8vh,5rem);
+}
+
+/* Letterpress divider, carried over from Direction A */
+.divider{display:flex; align-items:center; justify-content:center; gap:1.1rem; padding-block:.5rem}
+.divider::before,.divider::after{content:''; height:1px; width:min(9rem,22vw); background:var(--line)}
+.divider img{width:34px; height:34px}
+
+/* Two-up closing section on the landing page */
+.duo{
+  display:grid; grid-template-columns:1fr 1fr; gap:clamp(2rem,5vw,5rem);
+  padding-top:clamp(2.5rem,6vh,4rem); padding-bottom:clamp(4rem,10vh,7rem);
+}
+.duo p{max-width:34rem}
+.mail{font-family:'Newsreader',serif; font-size:clamp(1.25rem,2vw,1.6rem); line-height:1.5}
+.mail a{color:var(--accent); text-decoration-thickness:1px}
+
+/* Contact page */
+.contact-lead{font-family:'Newsreader',serif; font-size:clamp(1.5rem,2.6vw,2.1rem); line-height:1.5; max-width:44rem}
+.contact-lead a{color:var(--accent); text-decoration-thickness:1px; white-space:nowrap}
+.copy-btn{
+  font:inherit; font-size:.62em;
+  background:none; border:none; padding:.15em; margin-left:.3em; cursor:pointer;
+  color:var(--soft); vertical-align:-.05em; line-height:0;
+}
+.copy-btn:hover,.copy-btn:focus-visible{color:var(--accent)}
+.copy-btn svg{width:1em; height:1em}
+.copy-status{
+  font-family:'Hanken Grotesk',system-ui,sans-serif; font-size:.45em;
+  color:var(--accent); margin-left:.5em; vertical-align:.35em;
+}
+.copy-status:empty{margin:0}
+.reasons-title{margin-top:0; margin-bottom:1.4rem; font-size:clamp(1.35rem,2.2vw,1.7rem)}
+.contact-main{position:relative; isolation:isolate}
+.contact-art{
+  position:absolute; right:0; top:50%; transform:translateY(-50%);
+  height:min(96%, 640px); aspect-ratio:1638/1024;
+  opacity:.15; pointer-events:none; z-index:-1;
+}
+.contact-art img{position:absolute; right:0; top:0; height:100%; width:auto}
+.contact-art svg{position:absolute; inset:0; width:100%; height:100%}
+@media (max-width:720px){
+  .contact-art{height:min(64%, 440px)}
+}
+@media (max-width:480px){
+  .contact-lead .write-line{font-size:.72em; white-space:nowrap}
+}
+.prose h2{
+  font-family:'Newsreader',serif; font-optical-sizing:auto; font-weight:500;
+  font-size:clamp(1.3rem,2.2vw,1.6rem); line-height:1.25;
+  margin:2.4rem 0 1rem;
+}
+.prose ul{padding-left:1.2rem; margin-bottom:1.6rem}
+.prose li{margin-bottom:.55rem}
+.prose li::marker{color:var(--accent)}
+
+/* Footer */
+.site-footer{border-top:1px solid var(--line)}
+.foot-in{
+  display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center; justify-content:space-between;
+  padding-block:2.4rem 2.8rem;
+}
+.site-footer img{width:150px; height:auto; opacity:.85}
+.foot-links{font-size:.85rem; color:var(--soft); display:flex; flex-wrap:wrap; gap:1.4rem}
+.foot-links a{text-decoration:none}
+.foot-links a:hover{color:var(--accent)}
+.foot-note{font-size:.78rem; color:var(--soft); padding-bottom:2.2rem; margin-top:-1.2rem}
+
+@media (max-width:720px){
+  .head-in{height:auto; flex-wrap:wrap; row-gap:.6rem; padding-block:.9rem 0}
+  .brand img{height:64px; top:0; margin-bottom:-14px}
+  .head-in nav{flex-wrap:wrap; gap:1rem 1.2rem; padding-bottom:.9rem}
+  .head-in nav a{font-size:.85rem}
+  .hero{grid-template-columns:1fr; padding-top:3.5rem}
+  .hero .bird{order:-1; justify-self:start; width:96px}
+  .duo{grid-template-columns:1fr}
+}
