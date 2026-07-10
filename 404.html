@@ -3,22 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
 <title>Page not found · Fledgewright</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="/styles.css">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="theme-color" content="#0F1E15" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#EAE4CC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E2337">
 </head>
 <body class="inner">
+  <div id="sky" aria-hidden="true">
+    <div class="sky-layer sky-far"></div>
+    <div class="sky-layer sky-near"></div>
+  </div>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="wrap head-in">
       <a class="brand" href="/" aria-label="Fledgewright home">
-        <img class="only-dark" src="/assets/img/Fledgewright_wordmark_pine_reversed.svg" alt="Fledgewright">
-        <img class="only-light" src="/assets/img/Fledgewright_wordmark_pine_primary.svg" alt="Fledgewright">
+        <img class="only-dark" src="/assets/img/Fledgewright_wordmark_sky_reversed.svg" alt="Fledgewright">
+        <img class="only-light" src="/assets/img/Fledgewright_wordmark_sky_primary.svg" alt="Fledgewright">
       </a>
       <nav aria-label="Site">
         <a href="/about/">About</a>
@@ -42,14 +46,14 @@
     </div>
 
     <div class="divider" role="presentation">
-      <img src="/assets/img/fledgewright_hallmark_gold_transparent_1024.svg" alt="">
+      <img src="/assets/img/hallmark_ember_transparent_1024.svg" alt="">
     </div>
   </main>
 
   <footer class="site-footer">
     <div class="wrap foot-in">
-      <img class="only-dark" src="/assets/img/Fledgewright_wordmark_pine_mono-paper.svg" alt="Fledgewright">
-      <img class="only-light" src="/assets/img/Fledgewright_wordmark_pine_mono-ink.svg" alt="Fledgewright">
+      <img class="only-dark" src="/assets/img/Fledgewright_wordmark_sky_mono-cloud.svg" alt="Fledgewright">
+      <img class="only-light" src="/assets/img/Fledgewright_wordmark_sky_mono-ink.svg" alt="Fledgewright">
       <div class="foot-links">
         <a href="mailto:hello@fledgewright.com">hello@fledgewright.com</a>
         <a href="https://x.com/Fledgewright">X</a>
@@ -60,5 +64,6 @@
     </div>
     <div class="wrap foot-note">© 2026 Fledgewright LLC</div>
   </footer>
+  <script src="/sky-morph.js" defer></script>
 </body>
 </html>

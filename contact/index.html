@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
 <title>Contact Fledgewright: say hello</title>
 <meta name="description" content="One inbox, a real person. Write about the apps, a build for your practice, or anything else.">
 <link rel="stylesheet" href="/styles.css">
@@ -11,8 +12,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="canonical" href="https://fledgewright.com/contact/">
-<meta name="theme-color" content="#0F1E15" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#EAE4CC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E2337">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fledgewright">
 <meta property="og:title" content="Contact Fledgewright: say hello">
@@ -24,12 +24,16 @@
 <meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="inner">
+  <div id="sky" aria-hidden="true">
+    <div class="sky-layer sky-far"></div>
+    <div class="sky-layer sky-near"></div>
+  </div>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="wrap head-in">
       <a class="brand" href="/" aria-label="Fledgewright home">
-        <img class="only-dark" src="/assets/img/Fledgewright_wordmark_pine_reversed.svg" alt="Fledgewright">
-        <img class="only-light" src="/assets/img/Fledgewright_wordmark_pine_primary.svg" alt="Fledgewright">
+        <img class="only-dark" src="/assets/img/Fledgewright_wordmark_sky_reversed.svg" alt="Fledgewright">
+        <img class="only-light" src="/assets/img/Fledgewright_wordmark_sky_primary.svg" alt="Fledgewright">
       </a>
       <nav aria-label="Site">
         <a href="/about/">About</a>
@@ -43,13 +47,13 @@
   <main id="main" class="contact-main">
     <div class="contact-art" aria-hidden="true">
       <svg viewBox="0 0 1638 1024" xmlns="http://www.w3.org/2000/svg">
-        <g fill="#C8972F">
+        <g fill="#D0953E">
           <path d="M370,545 Q775,490 1180,340 Q775,504 370,545 Z" opacity=".9"/>
           <path d="M250,765 Q655,711 1060,560 Q655,725 250,765 Z" opacity=".72"/>
           <path d="M330,990 Q785,928 1240,770 Q785,942 330,990 Z" opacity=".55"/>
         </g>
       </svg>
-      <img src="/assets/img/fledgewright_hallmark_gold_transparent_1024.svg" alt="">
+      <img src="/assets/img/hallmark_ember_transparent_1024.svg" alt="">
     </div>
     <div class="wrap page-head">
       <h1 class="page-title">Say Hello</h1>
@@ -79,8 +83,8 @@
 
   <footer class="site-footer">
     <div class="wrap foot-in">
-      <img class="only-dark" src="/assets/img/Fledgewright_wordmark_pine_mono-paper.svg" alt="Fledgewright">
-      <img class="only-light" src="/assets/img/Fledgewright_wordmark_pine_mono-ink.svg" alt="Fledgewright">
+      <img class="only-dark" src="/assets/img/Fledgewright_wordmark_sky_mono-cloud.svg" alt="Fledgewright">
+      <img class="only-light" src="/assets/img/Fledgewright_wordmark_sky_mono-ink.svg" alt="Fledgewright">
       <div class="foot-links">
         <a href="mailto:hello@fledgewright.com">hello@fledgewright.com</a>
         <a href="https://x.com/Fledgewright">X</a>
@@ -122,5 +126,6 @@
       });
     })();
   </script>
+  <script src="/sky-morph.js" defer></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* Fledgewright — shared site styles. Pine & Tobacco palette. */
+/* Fledgewright — shared site styles. Sky & Ember palette, single night mode. */
 
 @font-face{
   font-family:'Newsreader';font-style:normal;font-weight:400 700;font-display:swap;
@@ -18,27 +18,13 @@
 }
 
 :root{
-  --night:#0F1E15; --paper:#EAE4CC; --gold:#C8972F; --ink:#1A2E20;
-  --moss:#43542F; --muted:#49563F;
-  /* dark is the site's home key */
-  --bg:var(--night); --tx:var(--paper);
-  --soft:rgba(234,228,204,.66); --line:rgba(234,228,204,.18);
-  --accent:var(--gold);
-  /* gold for display text; deepened on paper so large text clears 3:1 */
-  --gold-display:var(--gold);
+  color-scheme:dark;                 /* single night-sky look for everyone, regardless of OS setting */
+  --midnight:#0E2337; --abyss:#0A1A26; --indigo:#1C3650; --cloud:#E9EFEE; --ember:#D0953E;
+  --bg:var(--midnight); --tx:var(--cloud);
+  --soft:rgba(233,239,238,.68); --line:rgba(233,239,238,.16);
+  --accent:var(--ember); --gold-display:var(--ember); --link:var(--ember);
 }
-@media (prefers-color-scheme: light){
-  :root{
-    --bg:var(--paper); --tx:var(--ink);
-    --soft:rgba(26,46,32,.74); --line:rgba(26,46,32,.22);
-    --accent:var(--moss);
-    --gold-display:#A2761C;
-  }
-  .only-dark{display:none !important}
-}
-@media (prefers-color-scheme: dark){
-  .only-light{display:none !important}
-}
+.only-light{display:none !important}  /* light-context brand assets never render on the site */
 
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -57,11 +43,34 @@ body{
   font-family:'Hanken Grotesk',system-ui,sans-serif;
   font-size:1.0625rem; line-height:1.75;
   display:flex; flex-direction:column; min-height:100vh;
+  /* soft dark halo so light text stays distinct as clouds drift behind it */
+  text-shadow:0 1px 2px rgba(4,9,18,.55), 0 0 18px rgba(4,9,18,.6);
 }
+h1{ text-shadow:0 2px 4px rgba(4,9,18,.6), 0 0 28px rgba(4,9,18,.66); }
 main{flex:1}
-a{color:inherit; text-decoration-color:var(--accent); text-decoration-thickness:1.5px; text-underline-offset:3px}
-a:hover{color:var(--accent)}
+a{color:var(--link); text-decoration-color:var(--accent); text-decoration-thickness:1.5px; text-underline-offset:3px}
+a:hover{opacity:.8}
 img{max-width:100%}
+
+/* Sky: pre-lit seamless cloud plates (baked by rebrand_test/make_cloud_plates.py)
+   over a gradient night sky. The far layer and the .sky-near fallback drift in CSS;
+   sky-morph.js replaces .sky-near with the living WebGL layer when available. */
+#sky{position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden;
+  background:
+    radial-gradient(130% 100% at 90% 112%, rgba(42,74,99,.9) 0%, rgba(42,74,99,0) 55%),
+    linear-gradient(180deg, #0A1A26 0%, #0E2337 55%, #123049 100%);}
+.sky-layer{position:absolute; top:0; bottom:0; left:0; background-repeat:repeat}
+.sky-far{width:calc(100% + 1126px); background-image:url('/assets/img/cloud-plate-far.webp?v=1');
+  background-size:1126px 1126px; opacity:.85;
+  animation:sky-drift-far 920s linear infinite, sky-breathe 146s ease-in-out infinite alternate}
+#sky-morph{position:absolute; inset:0; width:100%; height:100%}
+.sky-gl .sky-near{display:none}
+@keyframes sky-breathe{from{opacity:.68}to{opacity:.9}}
+.sky-near{width:calc(100% + 1560px); background-image:url('/assets/img/cloud-plate-near.webp?v=1');
+  background-size:1560px 1560px; animation:sky-drift-near 380s linear infinite}
+@keyframes sky-drift-far{to{transform:translate3d(-1126px,0,0)}}
+@keyframes sky-drift-near{to{transform:translate3d(-1560px,0,0)}}
+@media (max-width:720px){ .sky-layer{animation:none} }  /* mobile fallback: static sky */
 
 .wrap{max-width:72rem; margin:0 auto; padding-inline:clamp(1.25rem,4vw,3rem)}
 
@@ -74,6 +83,8 @@ img{max-width:100%}
 .brand{display:block; line-height:0}
 .brand img{
   height:106px; width:auto; position:relative; top:6px;
+  /* images don't get the text halo; give the wordmark its own so it clears bright cloud */
+  filter:drop-shadow(0 1px 2px rgba(4,9,18,.55)) drop-shadow(0 0 14px rgba(4,9,18,.5));
 }
 /* Inner pages: the wordmark rests until you reach for home */
 body.inner .brand img{opacity:.45; transition:opacity .25s ease}
@@ -138,10 +149,6 @@ h1 .you{
 .app-block--two::before{
   background-image:url('/assets/img/app-teaser-2.png');
   left:clamp(133px, 25%, calc(100% - 133px)); /* left half of the column */
-}
-@media (prefers-color-scheme: light){
-  .app-block--one::before{opacity:.07}
-  .app-block--two::before{opacity:.16} /* pale gold needs more presence on paper */
 }
 .hero-art{position:relative; justify-self:end; width:clamp(240px,38vw,480px); aspect-ratio:1638/1024}
 .hero-art img{position:absolute; right:0; top:0; height:100%; width:auto}
