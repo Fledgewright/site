@@ -70,7 +70,7 @@ img{max-width:100%}
 #sky::after{content:''; position:absolute; inset:0;
   background:linear-gradient(180deg,
     rgba(14,35,55,.12) 0%, rgba(14,35,55,.08) 50%, rgba(14,35,55,.02) 100%);
-  -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);}
+  -webkit-backdrop-filter:blur(1px); backdrop-filter:blur(1px);}
 .sky-gl .sky-near{display:none}
 @keyframes sky-breathe{from{opacity:.68}to{opacity:.9}}
 .sky-near{width:calc(100% + 1560px); background-image:url('/assets/img/cloud-plate-near.webp?v=1');
