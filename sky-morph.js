@@ -7,6 +7,9 @@
    near plate stay in CSS; the CSS near layer is the no-WebGL fallback.
    Local rebrand test only. */
 (function () {
+  var CLOUDS_OFF = true; // 2026-07-10: clouds paused pending workshop — gradient-only
+                         // sky. Set false to bring the living clouds back.
+  if (CLOUDS_OFF) return;
   var host = document.getElementById('sky');
   var fallback = document.querySelector('.sky-near');
   if (!host || !fallback) return;

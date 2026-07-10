@@ -60,6 +60,9 @@ img{max-width:100%}
     radial-gradient(130% 100% at 90% 112%, rgba(42,74,99,.9) 0%, rgba(42,74,99,0) 55%),
     linear-gradient(180deg, #0A1A26 0%, #0E2337 55%, #123049 100%);}
 .sky-layer{position:absolute; top:0; bottom:0; left:0; background-repeat:repeat}
+/* 2026-07-10: clouds paused pending workshop (feedback: too busy). The gradient sky,
+   scrim, and veil remain. Delete this rule + flip CLOUDS_OFF in sky-morph.js to restore. */
+.sky-layer{display:none}
 .sky-far{width:calc(100% + 1126px); background-image:url('/assets/img/cloud-plate-far.webp?v=1');
   background-size:1126px 1126px; opacity:.85;
   animation:sky-drift-far 920s linear infinite, sky-breathe 146s ease-in-out infinite alternate}
