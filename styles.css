@@ -64,6 +64,13 @@ img{max-width:100%}
   background-size:1126px 1126px; opacity:.85;
   animation:sky-drift-far 920s linear infinite, sky-breathe 146s ease-in-out infinite alternate}
 #sky-morph{position:absolute; inset:0; width:100%; height:100%}
+/* scrim + veil: Midnight gradient (12% top -> 8% mid -> 2% bottom) over the clouds,
+   plus a soft blur of everything beneath it. Paints above all sky layers, and the
+   whole #sky stack sits behind the page content, so text and marks are untouched. */
+#sky::after{content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(14,35,55,.12) 0%, rgba(14,35,55,.08) 50%, rgba(14,35,55,.02) 100%);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);}
 .sky-gl .sky-near{display:none}
 @keyframes sky-breathe{from{opacity:.68}to{opacity:.9}}
 .sky-near{width:calc(100% + 1560px); background-image:url('/assets/img/cloud-plate-near.webp?v=1');
