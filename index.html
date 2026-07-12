@@ -28,12 +28,14 @@
     <div class="sky-layer sky-far"></div>
     <div class="sky-layer sky-near"></div>
   </div>
+  <div id="reading-column" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="wrap head-in">
       <a class="brand" href="/" aria-label="Fledgewright home">
         <img class="only-dark" src="/assets/img/Fledgewright_wordmark_sky_reversed.svg" alt="Fledgewright">
         <img class="only-light" src="/assets/img/Fledgewright_wordmark_sky_primary.svg" alt="Fledgewright">
+        <span class="brand-tagline">Software built to be outgrown</span>
       </a>
       <nav aria-label="Site">
         <a href="/about/">About</a>
@@ -45,8 +47,12 @@
   </header>
 
   <main id="main">
+
+    <!-- 1 · Hero -->
     <section class="wrap hero">
-      <h1>Building Apps That Build <span class="you">You</span></h1>
+      <div class="hero-copy reveal">
+        <h1>Building Apps That Build <span class="you">You</span></h1>
+      </div>
       <div class="hero-art" aria-hidden="true">
         <svg viewBox="0 0 1638 1024" xmlns="http://www.w3.org/2000/svg">
           <g fill="#D0953E">
@@ -60,21 +66,111 @@
     </section>
 
     <div class="wrap">
-      <p class="lead">Most apps are built to keep you. "Engagement", the industry calls it, and it runs on your attention and time. Fledgewright is a small studio building things that strengthen the interior and relational work of a real life, and then hand you your time back. Each app is designed to be needed less as you use it. No dependency hooks and no shame loops.</p>
+      <p class="lead reveal">Most apps are built to keep you. "Engagement", the industry calls it, and it runs on your attention and time. Fledgewright is a small studio building things that strengthen the interior and relational work of a real life, and then hand you your time back. Each app is designed to be needed less as you use it. No dependency hooks and no shame loops.</p>
     </div>
 
-    <div class="divider" role="presentation">
-      <img src="/assets/img/hallmark_ember_transparent_1024.svg" alt="">
+    <div class="wrap keep-wrap reveal">
+      <a class="keep-reading" href="#fork">
+        <span>Keep reading</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
     </div>
 
-    <section class="wrap duo">
-      <p>We make our own apps, sold once and owned forever, each one built for the slow work of a real life and designed to matter less to you over time. <a href="/apps/">See the apps</a>.</p>
-      <p>We also build for coaches and practitioners whose values line up with ours, turning their programs and workbooks into apps their clients can hold and grow from. One rule holds on every commission: the user wins. <a href="/commissions/">How commissions work</a>.</p>
+    <!-- 2 · Audience fork -->
+    <section id="fork" class="wrap band">
+      <div class="band-head reveal">
+        <p class="eyebrow">Find your path</p>
+        <h2>What Brings You Here?</h2>
+      </div>
+      <div class="fork">
+        <a class="reveal" href="/apps/">
+          <div>
+            <p class="eyebrow" style="margin-bottom:.5rem">For you</p>
+            <h3>I'm Looking for an App</h3>
+            <p>Private tools for the interior and relational work of a real life, each one designed to be needed less as you use it.</p>
+          </div>
+          <span class="go">See the apps &rarr;</span>
+        </a>
+        <a class="reveal glass" href="/commissions/">
+          <div>
+            <p class="eyebrow" style="margin-bottom:.5rem">For practitioners</p>
+            <h3>I Have a Method to Bring to Life</h3>
+            <p>Turn your program or workbook into an app your clients can hold and grow from.</p>
+          </div>
+          <span class="go">How commissions work &rarr;</span>
+        </a>
+      </div>
     </section>
 
-    <div class="wrap">
-      <p class="mail">If you'd like to collaborate, or just learn more, we would love to hear from you at <a href="mailto:hello@fledgewright.com">hello@fledgewright.com</a>.</p>
-    </div>
+    <!-- 3 · The apps -->
+    <section class="wrap band">
+      <div class="band-head reveal">
+        <p class="eyebrow">What we've built</p>
+        <h2>Two Apps, One Promise</h2>
+      </div>
+      <div class="apps-two">
+        <div class="panel app-teaser one reveal">
+          <h3>The Practice in Our Preach</h3>
+          <p class="status">A CBT companion app · in closed beta on Google Play</p>
+          <p>Built on a life coach's cognitive behavioral workbook, it teaches you to catch the negative patterns affecting your life and correct them in real time, so that in time you can do it without the app. <a href="/apps/">See more</a></p>
+        </div>
+        <div class="panel app-teaser two reveal">
+          <h3>Keeping the People Who Matter Close</h3>
+          <p class="status">A private, on-device memory keeper · public beta expected late 2026</p>
+          <p>A private, on-device second brain for neurodivergent minds. It holds the people and moments you care about, and when a connection has gone quiet it gently brings you back to what matters. <a href="/apps/">See more</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · Philosophy -->
+    <section class="wrap band">
+      <div class="band-head reveal">
+        <p class="eyebrow">Our product standard</p>
+        <h2>Most Apps Are Built to Keep You. Ours Are Built to Be Outgrown.</h2>
+      </div>
+      <div class="triptych">
+        <div class="principle reveal"><p class="n">01</p><h3>Teach, Don't Hook</h3><p>Every screen should leave you more capable, not more dependent.</p></div>
+        <div class="principle reveal"><p class="n">02</p><h3>Keep the Interior Private</h3><p>Your thoughts and your relationships belong to you.</p></div>
+        <div class="principle reveal"><p class="n">03</p><h3>Completion Is the Point</h3><p>Success is the day you can do it without the app.</p></div>
+      </div>
+    </section>
+
+    <!-- 5 · Commissions -->
+    <section class="wrap band">
+      <div class="panel commission reveal">
+        <p class="eyebrow">For coaches and practitioners</p>
+        <h2>Your Work, in Your Clients' Hands</h2>
+        <p>We also build for coaches and practitioners whose values line up with ours, turning their programs and workbooks into apps their clients can hold and grow from. One rule holds on every commission: the user wins.</p>
+        <div class="btns"><a class="btn-fw btn-fw--ghost" href="/commissions/">How commissions work</a></div>
+      </div>
+    </section>
+
+    <!-- 6 · Trust -->
+    <section class="wrap band">
+      <div class="band-head reveal">
+        <p class="eyebrow">Trust is a product feature</p>
+        <h2>Nothing Hidden in the Fine Print</h2>
+      </div>
+      <div class="trust-list">
+        <div class="trust-item reveal"><strong>No Ads, Ever</strong><span>We run no ads and have nothing to retarget you with.</span></div>
+        <div class="trust-item reveal"><strong>No Sale of Your Data</strong><span>We do not sell user data, and our business is not built on exploiting it.</span></div>
+        <div class="trust-item reveal"><strong>Yours to Export or Delete</strong><span>You can export your data, and you can delete it.</span></div>
+        <div class="trust-item reveal"><strong>Minimal Collection</strong><span>We collect the minimum needed to deliver the benefit.</span></div>
+      </div>
+      <div class="btns reveal"><a class="btn-fw btn-fw--ghost" href="/privacy/">Read the privacy page</a></div>
+    </section>
+
+    <!-- 7 · Closing -->
+    <section class="wrap closing reveal">
+      <img class="swift" src="/assets/img/hallmark_ember_transparent_1024.svg" alt="">
+      <h2>Software built to be outgrown</h2>
+      <p>If you'd like to collaborate, or just learn more, we would love to hear from you at <a href="mailto:hello@fledgewright.com">hello@fledgewright.com</a>.</p>
+      <div class="btns">
+        <a class="btn-fw btn-fw--primary" href="/apps/">See the apps</a>
+        <a class="btn-fw btn-fw--ghost" href="mailto:hello@fledgewright.com">Start a conversation</a>
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -91,6 +187,14 @@
     </div>
     <div class="wrap foot-note">© 2026 Fledgewright LLC</div>
   </footer>
+
   <script src="/sky-morph.js" defer></script>
+  <script>
+    // Reveal-on-scroll for the homepage sections (reduced-motion falls back to visible via CSS)
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  </script>
 </body>
 </html>

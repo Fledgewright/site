@@ -55,14 +55,14 @@ img{max-width:100%}
 /* Sky: pre-lit seamless cloud plates (baked by rebrand_test/make_cloud_plates.py)
    over a gradient night sky. The far layer and the .sky-near fallback drift in CSS;
    sky-morph.js replaces .sky-near with the living WebGL layer when available. */
-#sky{position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden;
+#sky{position:fixed; inset:0; z-index:-2; pointer-events:none; overflow:hidden;
   background:
     radial-gradient(130% 100% at 90% 112%, rgba(42,74,99,.9) 0%, rgba(42,74,99,0) 55%),
     linear-gradient(180deg, #0A1A26 0%, #0E2337 55%, #123049 100%);}
 .sky-layer{position:absolute; top:0; bottom:0; left:0; background-repeat:repeat}
-/* 2026-07-10: clouds paused pending workshop (feedback: too busy). The gradient sky,
-   scrim, and veil remain. Delete this rule + flip CLOUDS_OFF in sky-morph.js to restore. */
-.sky-layer{display:none}
+/* 2026-07-12: living clouds restored on the volumetric -vol bake; the reading-column
+   scrim (below) carries legibility. To pause again: flip CLOUDS_OFF in sky-morph.js
+   and add `.sky-layer{display:none}` back here. */
 .sky-far{width:calc(100% + 1126px); background-image:url('/assets/img/cloud-plate-far.webp?v=1');
   background-size:1126px 1126px; opacity:.85;
   animation:sky-drift-far 920s linear infinite, sky-breathe 146s ease-in-out infinite alternate}
@@ -82,23 +82,50 @@ img{max-width:100%}
 @keyframes sky-drift-near{to{transform:translate3d(-1560px,0,0)}}
 @media (max-width:720px){ .sky-layer{animation:none} }  /* mobile fallback: static sky */
 
+/* Reading-column scrim: a faint frosted sheet the width of the content column that
+   blurs the sky behind text so the drifting clouds settle where you read, while
+   staying open in the margins. Feathered edges dissolve into the open sky. Sits above
+   #sky (z-index -2) and below page content. */
+#reading-column{
+  position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
+  width:min(calc(100% - 2.5rem), 72rem);
+  z-index:-1; pointer-events:none;
+  background:rgba(14,35,55,.46);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  -webkit-mask-image:linear-gradient(to right, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
+  mask-image:linear-gradient(to right, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
+}
+
 .wrap{max-width:72rem; margin:0 auto; padding-inline:clamp(1.25rem,4vw,3rem)}
 
-/* Header: oversized wordmark fills the band, g-tails dangle over the rule */
-.site-header{border-bottom:1px solid var(--line)}
-.head-in{
-  display:flex; align-items:flex-start; justify-content:space-between;
-  height:5.5rem; position:relative;
+/* Header: wordmark + tagline lockup, sticky and frosted so it always reads clear
+   over the drifting clouds. The g-tails hang inside the wordmark box; the tagline
+   sits just below, tracked out to the wordmark's width. */
+.site-header{
+  position:sticky; top:0; z-index:20; border-bottom:1px solid var(--line);
+  background:rgba(14,35,55,.72);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
 }
-.brand{display:block; line-height:0}
+.head-in{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem; padding-block:.85rem; position:relative;
+}
+.brand{display:flex; flex-direction:column; align-items:flex-start; line-height:0; text-decoration:none}
 .brand img{
-  height:106px; width:auto; position:relative; top:6px;
+  height:72px; width:auto;
   /* images don't get the text halo; give the wordmark its own so it clears bright cloud */
   filter:drop-shadow(0 1px 2px rgba(4,9,18,.55)) drop-shadow(0 0 14px rgba(4,9,18,.5));
 }
-/* Inner pages: the wordmark rests until you reach for home */
-body.inner .brand img{opacity:.45; transition:opacity .25s ease}
-body.inner .brand:hover img, body.inner .brand:focus-visible img{opacity:1}
+.brand-tagline{
+  font-family:'Hanken Grotesk',system-ui,sans-serif;
+  font-size:.6rem; font-weight:600; letter-spacing:.7em; text-transform:uppercase;
+  color:var(--soft); line-height:1; white-space:nowrap;
+  margin-top:6px; padding-left:.35em;   /* clear the g-tails; tracking adds a leading gap */
+}
+/* Inner pages: the whole lockup rests until you reach for home */
+body.inner .brand img, body.inner .brand-tagline{opacity:.45; transition:opacity .25s ease}
+body.inner .brand:hover img, body.inner .brand:focus-visible img,
+body.inner .brand:hover .brand-tagline, body.inner .brand:focus-visible .brand-tagline{opacity:1}
 .head-in nav{
   display:flex; gap:clamp(1rem,2.5vw,2.2rem);
   align-self:center;
@@ -260,9 +287,10 @@ h1 .you{
 .foot-note{font-size:.78rem; color:var(--soft); padding-bottom:2.2rem; margin-top:-1.2rem}
 
 @media (max-width:720px){
-  .head-in{height:auto; flex-wrap:wrap; row-gap:.6rem; padding-block:.9rem 0}
-  .brand img{height:64px; top:0; margin-bottom:-14px}
-  .head-in nav{flex-wrap:wrap; gap:1rem 1.2rem; padding-bottom:.9rem}
+  .head-in{flex-wrap:wrap; row-gap:.5rem; padding-block:.8rem}
+  .brand img{height:56px}
+  .brand-tagline{font-size:.5rem; letter-spacing:.5em; margin-top:4px}
+  .head-in nav{flex-wrap:wrap; gap:1rem 1.2rem; align-self:center}
   .head-in nav a{font-size:.85rem}
   .hero{grid-template-columns:1fr; padding-top:3.5rem; position:relative; isolation:isolate}
   .hero-art{
@@ -272,4 +300,123 @@ h1 .you{
   .hero-art svg{opacity:1} /* the layer opacity carries the dimming on mobile */
   .hero-art svg path{animation:none} /* no motion behind the mobile headline */
   .duo{grid-template-columns:1fr}
+}
+
+/* ===== Homepage: evidence-first scroll sections (Sky & Ember, 2026-07-12) ===== */
+
+/* Section eyebrow (shares the app-status look) */
+.eyebrow{
+  font-family:'Hanken Grotesk',system-ui,sans-serif;
+  font-size:.8rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:.7rem;
+}
+
+/* Buttons: modest radius, solid ember, no gradient, quiet lift */
+.btns{display:flex; flex-wrap:wrap; gap:.9rem; margin-top:2rem}
+.btn-fw{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.72rem 1.25rem; border-radius:9px;
+  font-family:'Hanken Grotesk',system-ui,sans-serif; font-weight:600; font-size:.95rem;
+  text-decoration:none; border:1px solid var(--line);
+  transition:transform .2s ease, background .2s ease, border-color .2s ease, color .2s ease;
+}
+.btn-fw--primary{background:var(--ember); color:var(--midnight); border-color:var(--ember)}
+.btn-fw--primary:hover{background:#e0a44e}
+.btn-fw--ghost{background:transparent; color:var(--tx)}
+.btn-fw--ghost:hover{border-color:var(--accent); color:var(--accent)}
+.btn-fw:hover{transform:translateY(-2px)}
+
+/* Frosted indigo-glass panel */
+.panel{
+  background:rgba(20,42,64,.5);
+  -webkit-backdrop-filter:blur(11px); backdrop-filter:blur(11px);
+  border:1px solid var(--line); border-radius:22px;
+  padding:clamp(1.6rem,4vw,2.9rem);
+}
+
+/* Section rhythm */
+.band{padding-block:clamp(3rem,8vh,5.5rem)}
+.band-head{max-width:44rem; margin-bottom:clamp(1.8rem,4vh,2.8rem)}
+.band-head h2{
+  font-family:'Newsreader',serif; font-optical-sizing:auto; font-weight:480;
+  font-size:clamp(1.8rem,3.4vw,2.7rem); line-height:1.18; letter-spacing:-.01em;
+}
+
+/* Hero "Keep reading" scroll cue */
+.keep-wrap{display:flex; justify-content:center; margin-top:clamp(2rem,5vh,3.5rem)}
+.keep-reading{
+  display:inline-flex; flex-direction:column; align-items:center; gap:.45rem;
+  text-decoration:none; color:var(--soft);
+  font-family:'Hanken Grotesk',system-ui,sans-serif; font-size:.76rem; font-weight:600;
+  letter-spacing:.16em; text-transform:uppercase;
+}
+.keep-reading:hover{color:var(--accent)}
+.keep-reading .chev{width:22px; height:22px; animation:nudge 2.2s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+#fork{scroll-margin-top:130px}
+
+/* Audience fork */
+.fork{display:grid; grid-template-columns:1fr 1fr; gap:1.2rem}
+.fork a{
+  display:flex; flex-direction:column; justify-content:space-between; gap:2.5rem;
+  min-height:15rem; padding:clamp(1.6rem,3.5vw,2.4rem);
+  border:1px solid var(--line); border-radius:22px; text-decoration:none; color:var(--tx);
+  transition:transform .25s ease, border-color .25s ease;
+}
+.fork a.glass{background:rgba(20,42,64,.5); -webkit-backdrop-filter:blur(11px); backdrop-filter:blur(11px)}
+.fork a:hover{transform:translateY(-4px); border-color:var(--accent)}
+.fork h3{font-family:'Newsreader',serif; font-weight:500; font-size:clamp(1.4rem,2.4vw,1.9rem); line-height:1.15; margin-top:.2rem}
+.fork p{color:var(--soft); font-size:1rem; margin-top:.9rem}
+.fork .go{color:var(--accent); font-size:.9rem; font-weight:600}
+
+/* The apps — two teaser panels with faint icon watermarks */
+.apps-two{display:grid; grid-template-columns:1fr 1fr; gap:1.2rem}
+.app-teaser{position:relative; overflow:hidden}
+.app-teaser::before{
+  content:''; position:absolute; right:-40px; bottom:-40px; width:230px; height:230px;
+  background-position:center; background-size:contain; background-repeat:no-repeat;
+  opacity:.07; pointer-events:none;
+}
+.app-teaser.one::before{background-image:url('/assets/img/app-teaser-1.png')}
+.app-teaser.two::before{background-image:url('/assets/img/app-teaser-2.png')}
+.app-teaser h3{font-family:'Newsreader',serif; font-weight:500; font-size:clamp(1.35rem,2.4vw,1.8rem); line-height:1.2; position:relative}
+.app-teaser .status{
+  font-family:'Hanken Grotesk',system-ui,sans-serif; font-size:.78rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin:.55rem 0 1rem;
+}
+.app-teaser p{color:var(--soft); position:relative}
+.app-teaser p a{white-space:nowrap}
+
+/* Philosophy triptych */
+.triptych{display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem}
+.principle{padding-top:1.3rem; border-top:1px solid var(--accent)}
+.principle .n{font-family:'Hanken Grotesk',system-ui,sans-serif; font-size:.8rem; font-weight:700; letter-spacing:.12em; color:var(--accent)}
+.principle h3{font-family:'Newsreader',serif; font-weight:500; font-size:1.4rem; margin:.5rem 0}
+.principle p{color:var(--soft); font-size:1rem}
+
+/* Commissions panel */
+.commission h2{font-family:'Newsreader',serif; font-weight:500; font-size:clamp(1.7rem,3vw,2.4rem); line-height:1.18; margin-bottom:1.1rem}
+.commission > p{max-width:40rem; color:var(--soft)}
+
+/* Trust strip */
+.trust-list{display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-top:1.6rem}
+.trust-item{border:1px solid var(--line); border-radius:16px; padding:1.2rem}
+.trust-item strong{display:block; margin-bottom:.35rem; font-weight:600}
+.trust-item span{color:var(--soft); font-size:.95rem}
+
+/* Closing flight beat */
+.closing{text-align:center; padding-block:clamp(3.5rem,9vh,6rem)}
+.closing .swift{width:64px; height:64px; margin:0 auto 1.6rem; opacity:.85; animation:rise 6s ease-in-out infinite}
+@keyframes rise{0%,100%{transform:translateY(4px)}50%{transform:translateY(-8px)}}
+.closing h2{font-family:'Newsreader',serif; font-weight:480; font-size:clamp(1.9rem,4vw,3rem); line-height:1.15}
+.closing p{max-width:40rem; margin:1.2rem auto 0; color:var(--soft)}
+.closing .btns{justify-content:center}
+
+/* Reveal on scroll */
+.reveal{opacity:0; transform:translateY(20px); transition:opacity .7s ease, transform .7s ease}
+.reveal.visible{opacity:1; transform:none}
+@media (prefers-reduced-motion: reduce){ .reveal{opacity:1; transform:none} }
+
+@media (max-width:760px){
+  .fork, .apps-two, .triptych, .trust-list{grid-template-columns:1fr}
 }

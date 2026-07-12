@@ -5,10 +5,10 @@
    silhouette itself moves: thin cloud evaporates, lumps reform — a true morph,
    not a crossfade — then drifts the whole field. The far layer and the static
    near plate stay in CSS; the CSS near layer is the no-WebGL fallback.
-   Local rebrand test only. */
+   Live on the Sky & Ember site; one drifting sky shared across page navigations. */
 (function () {
-  var CLOUDS_OFF = true; // 2026-07-10: clouds paused pending workshop — gradient-only
-                         // sky. Set false to bring the living clouds back.
+  var CLOUDS_OFF = false; // 2026-07-12: living clouds restored on the volumetric -vol
+                          // bake. Set true to fall back to the gradient-only sky.
   if (CLOUDS_OFF) return;
   var host = document.getElementById('sky');
   var fallback = document.querySelector('.sky-near');
@@ -21,10 +21,19 @@
         || canvas.getContext('experimental-webgl', { alpha: true, premultipliedAlpha: false });
   if (!gl) { host.removeChild(canvas); return; } // CSS drift fallback stays
 
-  var TILE = 1560;          // css px per tile, matches the fallback background-size
-  var DRIFT = TILE / 380;   // css px per second, matches the fallback 380s loop
-  var PERIOD = 120;         // seconds for a full evaporate-and-reform ping-pong
-  var WAMP = 0.03;          // warp amplitude in tile-UV units (~47 css px)
+  // Cross-page continuity: the whole animation is a pure function of elapsed time, so
+  // we anchor it to a shared epoch in sessionStorage. Every page computes its clock
+  // from the same origin, so the sky resumes where it left off on navigation instead
+  // of restarting. Deterministic + periodic, so pages never desync.
+  var epoch = +sessionStorage.getItem('fw_sky_epoch');
+  if (!epoch) { epoch = Date.now(); sessionStorage.setItem('fw_sky_epoch', String(epoch)); }
+
+  var TILE = 2048;          // css px per tile (native texture res, 1:1 crisp). Bigger
+                            // than the viewport so you don't see the same tile twice.
+  var DRIFT = TILE / 560;   // css px per second — slower drift so the loop is less obvious
+  var PERIOD = 220;         // seconds for a full evaporate-and-reform ping-pong — longer
+                            // so shapes linger and reshape gently instead of fast fading
+  var WAMP = 0.04;          // warp amplitude — a touch more organic reshaping
   var WSLIDE = [0.0019, 0.00075]; // warp field slide, uv/s — differs from the drift
                                   // velocity, so shapes deform (the old morph's trick)
   var WSLIDE2 = [0.0055, 0.0022]; // fine boil-warp slide, uv/s — faster than WSLIDE
@@ -37,7 +46,7 @@
   var FRAG = [
     'precision mediump float;',
     'uniform sampler2D u_a,u_b,u_warp; uniform vec2 u_res,u_woff,u_woff2,u_boff;',
-    'uniform float u_tile,u_x,u_w,u_wamp;',
+    'uniform float u_tile,u_x,u_w,u_wamp,u_cover;',
     'void main(){',
     ' vec2 css=vec2(gl_FragCoord.x,u_res.y-gl_FragCoord.y);',
     ' vec2 uv=vec2((css.x+u_x)/u_tile,-css.y/u_tile);', // REPEAT wraps negatives
@@ -49,8 +58,9 @@
     ' uv+=wrp;',
     ' vec3 A=texture2D(u_a,uv).rgb, B=texture2D(u_b,uv+u_boff).rgb;',
     ' float d=mix(A.r,B.r,u_w);',              // mixed density...
-    // feathered silhouette: translucent fringe around a solid core (video look)
-    ' float a=0.5*smoothstep(0.46,0.60,d)+0.5*smoothstep(0.58,0.70,d);',
+    // feathered silhouette: translucent fringe around a solid core (video look).
+    // u_cover shifts the coverage threshold: + = sparser/thinner, - = denser.
+    ' float a=0.5*smoothstep(0.46+u_cover,0.60+u_cover,d)+0.5*smoothstep(0.58+u_cover,0.70+u_cover,d);',
     ' float l=mix(A.g,B.g,u_w), hot=mix(A.b,B.b,u_w);',
     // same three-stop ramp as the bake: white -> gray-blue -> slate
     ' float dk=1.-l;',
@@ -79,7 +89,7 @@
   gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
   var U = {};
-  ['u_a','u_b','u_warp','u_res','u_woff','u_woff2','u_boff','u_tile','u_x','u_w','u_wamp']
+  ['u_a','u_b','u_warp','u_res','u_woff','u_woff2','u_boff','u_tile','u_x','u_w','u_wamp','u_cover']
     .forEach(function (k) { U[k] = gl.getUniformLocation(prog, k); });
 
   // keyframe textures (2048 = POT, so REPEAT wrapping is available)
@@ -102,9 +112,9 @@
     img.src = src;
     return t;
   }
-  var VER = '?v=1'; // bump after every re-bake or the browser serves stale plates
-  texture(0, '/assets/img/cloud-morph-a.webp' + VER);
-  texture(1, '/assets/img/cloud-morph-b.webp' + VER);
+  var VER = '?v=vol2'; // bump after every re-bake or the browser serves stale plates
+  texture(0, '/assets/img/cloud-morph-a-vol2.webp' + VER);
+  texture(1, '/assets/img/cloud-morph-b-vol2.webp' + VER);
   texture(2, '/assets/img/cloud-warp.webp' + VER);
 
   var dpr = 1;
@@ -121,10 +131,14 @@
   function draw(t) {
     if (loaded < 3) return;
     resize();
-    var s = t * 0.001;
-    var w = 0.5 - 0.5 * Math.cos(2 * Math.PI * s / PERIOD); // slow ping-pong A<->B
+    var s = (Date.now() - epoch) / 1000;  // shared clock → continuous across pages
+    var period = (window.__SKY_PERIOD != null) ? window.__SKY_PERIOD : PERIOD; // tuning hook
+    var drift = (window.__SKY_DRIFT != null) ? window.__SKY_DRIFT : DRIFT;     // tuning hook
+    var w = 0.5 - 0.5 * Math.cos(2 * Math.PI * s / period); // slow ping-pong A<->B
     if (window.__SKY_W != null) w = window.__SKY_W;          // local tuning hook
     var amp = (window.__SKY_AMP != null) ? window.__SKY_AMP : WAMP;
+    // density dial: shifts the coverage threshold. + = sparser/thinner, - = denser.
+    var cover = (window.__SKY_COVER != null) ? window.__SKY_COVER : -0.072;
     gl.useProgram(prog);
     gl.uniform1i(U.u_a, 0); gl.uniform1i(U.u_b, 1); gl.uniform1i(U.u_warp, 2);
     gl.uniform2f(U.u_res, canvas.width, canvas.height);
@@ -132,9 +146,10 @@
     gl.uniform2f(U.u_woff2, s * WSLIDE2[0], s * WSLIDE2[1]);
     gl.uniform2f(U.u_boff, s * BSLIDE[0], s * BSLIDE[1]);
     gl.uniform1f(U.u_tile, TILE * dpr);
-    gl.uniform1f(U.u_x, s * DRIFT * dpr);
+    gl.uniform1f(U.u_x, s * drift * dpr);
     gl.uniform1f(U.u_w, w);
     gl.uniform1f(U.u_wamp, amp);
+    gl.uniform1f(U.u_cover, cover);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
