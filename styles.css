@@ -141,6 +141,12 @@ h1 .you{
   font-size:clamp(1.6rem,2.8vw,2.1rem); line-height:1.2;
   margin-top:clamp(2rem,5vh,3rem);
 }
+/* Eyebrow status line under each app's section title */
+.app-status{
+  font-family:'Hanken Grotesk',system-ui,sans-serif;
+  font-size:.8rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent); margin-top:.55rem; margin-bottom:0;
+}
 .hairline{border:none; height:1px; width:70%; background:var(--line); margin:3rem auto}
 
 /* Faint app-icon watermarks behind the two app write-ups */
