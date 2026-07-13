@@ -26,12 +26,25 @@
         || canvas.getContext('experimental-webgl', { alpha: true, premultipliedAlpha: false });
   if (!gl) { host.removeChild(canvas); return; } // CSS drift fallback stays
 
+  // WebGL will drive the near clouds; hide the CSS near-plate fallback now so it never
+  // flashes before the reveal (it stays the fallback only when WebGL is unavailable), and
+  // so the canvas fades in cleanly over the gradient instead of dipping through it.
+  fallback.style.display = 'none';
+
   // Cross-page continuity: the whole animation is a pure function of elapsed time, so
   // we anchor it to a shared epoch in sessionStorage. Every page computes its clock
   // from the same origin, so the sky resumes where it left off on navigation instead
   // of restarting. Deterministic + periodic, so pages never desync.
-  var epoch = +sessionStorage.getItem('fw_sky_epoch');
+  var epochRaw = sessionStorage.getItem('fw_sky_epoch');
+  var firstAppear = !epochRaw;   // first time the sky renders this session
+  var epoch = +epochRaw;
   if (!epoch) { epoch = Date.now(); sessionStorage.setItem('fw_sky_epoch', String(epoch)); }
+
+  // First-load reveal: the session's first render gets a graceful fade + a density "gather"
+  // (clouds thicken into being); later navigations settle quickly since position is already
+  // continuous via the epoch. The fade duration is read by the CSS transition.
+  host.style.setProperty('--sky-fade', firstAppear ? '1200ms' : '400ms');
+  var GATHER_DUR = 1.5, GATHER_AMT = 0.18, gatherT0 = null;
 
   var TILE = 2048;          // css px per tile (native texture res, 1:1 crisp). Bigger
                             // than the viewport so you don't see the same tile twice.
@@ -112,7 +125,13 @@
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       loaded++;
-      if (loaded === 3) { host.classList.add('sky-gl'); start(); draw(0); }
+      if (loaded === 3) {
+        if (firstAppear && !still()) gatherT0 = Date.now(); // start the density gather
+        start(); draw(0);
+        // defer the reveal one frame so the opacity:0 state paints first and the fade
+        // actually animates (flipping the class in the creation frame would snap to full)
+        requestAnimationFrame(function () { host.classList.add('sky-gl'); });
+      }
     };
     img.src = src;
     return t;
@@ -143,7 +162,13 @@
     if (window.__SKY_W != null) w = window.__SKY_W;          // local tuning hook
     var amp = (window.__SKY_AMP != null) ? window.__SKY_AMP : WAMP;
     // density dial: shifts the coverage threshold. + = sparser/thinner, - = denser.
-    var cover = (window.__SKY_COVER != null) ? window.__SKY_COVER : -0.072;
+    // On first appearance, "gather": start sparser and thicken to the baked density.
+    var gatherOff = 0;
+    if (gatherT0 != null) {
+      var gp = (Date.now() - gatherT0) / 1000 / GATHER_DUR;
+      if (gp >= 1) { gatherT0 = null; } else { var ge = gp * gp * (3 - 2 * gp); gatherOff = (1 - ge) * GATHER_AMT; }
+    }
+    var cover = ((window.__SKY_COVER != null) ? window.__SKY_COVER : -0.072) + gatherOff;
     // roil dials, all independent of the morph fade (PERIOD): warp slide speed (how fast
     // shapes churn), boil-octave weight (edge convection), keyframe-B slide (reform even
     // while the fade dwells). Add life without speeding the evaporate/reform fade.
