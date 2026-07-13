@@ -14,10 +14,10 @@
   var fallback = document.querySelector('.sky-near');
   if (!host || !fallback) return;
 
-  // Clouds off entirely on touch devices (phones/tablets) — gradient sky only. CSS hides
-  // the fallback plates on the same query; here we skip the WebGL layer altogether.
-  var touchMq = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)');
-  if (touchMq && touchMq.matches) return;
+  // 2026-07-13 TRIAL: clouds ON for touch devices too, to gauge mobile performance.
+  // Restore these two lines (and the still() freeze + the CSS hide) to turn them back off.
+  // var touchMq = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)');
+  // if (touchMq && touchMq.matches) return;
 
   var canvas = document.createElement('canvas');
   canvas.id = 'sky-morph';
@@ -196,7 +196,8 @@
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
   // freeze only on true touch devices, not on any narrow desktop window
   var small = window.matchMedia && window.matchMedia('(max-width: 720px) and (pointer: coarse)');
-  function still() { return (reduce && reduce.matches) || (small && small.matches); }
+  // 2026-07-13 TRIAL: mobile animates like desktop (restore `|| (small && small.matches)` to freeze)
+  function still() { return (reduce && reduce.matches); }
   function frame(t) { draw(t); raf = requestAnimationFrame(frame); }
   function start() {
     if (running || still() || document.hidden || !onScreen) return;
