@@ -38,12 +38,12 @@
   var DRIFT = TILE / 560;   // css px per second — slower drift so the loop is less obvious
   var PERIOD = 220;         // seconds for a full evaporate-and-reform ping-pong — longer
                             // so shapes linger and reshape gently instead of fast fading
-  var WAMP = 0.04;          // warp amplitude — a touch more organic reshaping
-  var WSLIDE = [0.0019, 0.00075]; // warp field slide, uv/s — differs from the drift
+  var WAMP = 0.045;         // warp amplitude — a touch more organic reshaping (tuned roil)
+  var WSLIDE = [0.00266, 0.00105]; // warp field slide, uv/s — differs from the drift
                                   // velocity, so shapes deform (the old morph's trick)
-  var WSLIDE2 = [0.0055, 0.0022]; // fine boil-warp slide, uv/s — faster than WSLIDE
+  var WSLIDE2 = [0.0077, 0.00308]; // fine boil-warp slide, uv/s — faster than WSLIDE
                                   // but tiny amplitude: lump edges churn in place
-  var BSLIDE = [0.00045, -0.0002]; // keyframe B slides relative to A, uv/s: the mix
+  var BSLIDE = [0.000675, -0.0003]; // keyframe B slides relative to A, uv/s: the mix
                                   // source itself keeps changing, so the density morph
                                   // never parks at the ping-pong turnarounds
 
@@ -51,7 +51,7 @@
   var FRAG = [
     'precision mediump float;',
     'uniform sampler2D u_a,u_b,u_warp; uniform vec2 u_res,u_woff,u_woff2,u_boff;',
-    'uniform float u_tile,u_x,u_w,u_wamp,u_cover;',
+    'uniform float u_tile,u_x,u_w,u_wamp,u_cover,u_boil;',
     'void main(){',
     ' vec2 css=vec2(gl_FragCoord.x,u_res.y-gl_FragCoord.y);',
     ' vec2 uv=vec2((css.x+u_x)/u_tile,-css.y/u_tile);', // REPEAT wraps negatives
@@ -59,7 +59,7 @@
     // cloud field, so billows continuously deform instead of translating rigidly.
     // second sample at 3x frequency = slow edge boil (convective churn, not slide)
     ' vec2 wrp=(texture2D(u_warp,uv+u_woff).rg-.5)*u_wamp',
-    '        +(texture2D(u_warp,uv*3.+u_woff2).rg-.5)*u_wamp*0.4;',
+    '        +(texture2D(u_warp,uv*3.+u_woff2).rg-.5)*u_wamp*u_boil;',
     ' uv+=wrp;',
     ' vec3 A=texture2D(u_a,uv).rgb, B=texture2D(u_b,uv+u_boff).rgb;',
     ' float d=mix(A.r,B.r,u_w);',              // mixed density...
@@ -94,7 +94,7 @@
   gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
   var U = {};
-  ['u_a','u_b','u_warp','u_res','u_woff','u_woff2','u_boff','u_tile','u_x','u_w','u_wamp','u_cover']
+  ['u_a','u_b','u_warp','u_res','u_woff','u_woff2','u_boff','u_tile','u_x','u_w','u_wamp','u_cover','u_boil']
     .forEach(function (k) { U[k] = gl.getUniformLocation(prog, k); });
 
   // keyframe textures (2048 = POT, so REPEAT wrapping is available)
@@ -144,17 +144,24 @@
     var amp = (window.__SKY_AMP != null) ? window.__SKY_AMP : WAMP;
     // density dial: shifts the coverage threshold. + = sparser/thinner, - = denser.
     var cover = (window.__SKY_COVER != null) ? window.__SKY_COVER : -0.072;
+    // roil dials, all independent of the morph fade (PERIOD): warp slide speed (how fast
+    // shapes churn), boil-octave weight (edge convection), keyframe-B slide (reform even
+    // while the fade dwells). Add life without speeding the evaporate/reform fade.
+    var warpSlide = (window.__SKY_WARPSLIDE != null) ? window.__SKY_WARPSLIDE : 1.0;
+    var boil = (window.__SKY_BOIL != null) ? window.__SKY_BOIL : 0.6;
+    var bslide = (window.__SKY_BSLIDE != null) ? window.__SKY_BSLIDE : 1.0;
     gl.useProgram(prog);
     gl.uniform1i(U.u_a, 0); gl.uniform1i(U.u_b, 1); gl.uniform1i(U.u_warp, 2);
     gl.uniform2f(U.u_res, canvas.width, canvas.height);
-    gl.uniform2f(U.u_woff, s * WSLIDE[0], s * WSLIDE[1]);
-    gl.uniform2f(U.u_woff2, s * WSLIDE2[0], s * WSLIDE2[1]);
-    gl.uniform2f(U.u_boff, s * BSLIDE[0], s * BSLIDE[1]);
+    gl.uniform2f(U.u_woff, s * WSLIDE[0] * warpSlide, s * WSLIDE[1] * warpSlide);
+    gl.uniform2f(U.u_woff2, s * WSLIDE2[0] * warpSlide, s * WSLIDE2[1] * warpSlide);
+    gl.uniform2f(U.u_boff, s * BSLIDE[0] * bslide, s * BSLIDE[1] * bslide);
     gl.uniform1f(U.u_tile, TILE * dpr);
     gl.uniform1f(U.u_x, s * drift * dpr);
     gl.uniform1f(U.u_w, w);
     gl.uniform1f(U.u_wamp, amp);
     gl.uniform1f(U.u_cover, cover);
+    gl.uniform1f(U.u_boil, boil);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
