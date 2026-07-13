@@ -14,6 +14,11 @@
   var fallback = document.querySelector('.sky-near');
   if (!host || !fallback) return;
 
+  // Clouds off entirely on touch devices (phones/tablets) — gradient sky only. CSS hides
+  // the fallback plates on the same query; here we skip the WebGL layer altogether.
+  var touchMq = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)');
+  if (touchMq && touchMq.matches) return;
+
   var canvas = document.createElement('canvas');
   canvas.id = 'sky-morph';
   host.insertBefore(canvas, fallback);

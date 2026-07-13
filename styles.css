@@ -80,20 +80,26 @@ img{max-width:100%}
   background-size:1560px 1560px; animation:sky-drift-near 380s linear infinite}
 @keyframes sky-drift-far{to{transform:translate3d(-1126px,0,0)}}
 @keyframes sky-drift-near{to{transform:translate3d(-1560px,0,0)}}
-@media (max-width:720px){ .sky-layer{animation:none} }  /* mobile fallback: static sky */
+/* Touch devices (phones/tablets): clouds off entirely, gradient sky only, and drop the
+   reading-column scrim too (with no clouds there is nothing to blur, so it would only add
+   a faint vignette). Matches the JS, which skips the WebGL layer on the same query.
+   Desktops (incl. narrow windows) keep the sky — hover-capable fine pointer never matches. */
+@media (hover:none) and (pointer:coarse){ .sky-layer, #reading-column{display:none} }
 
 /* Reading-column scrim: a faint frosted sheet the width of the content column that
    blurs the sky behind text so the drifting clouds settle where you read, while
    staying open in the margins. Feathered edges dissolve into the open sky. Sits above
    #sky (z-index -2) and below page content. */
 #reading-column{
-  position:fixed; top:0; bottom:0; left:50%; transform:translateX(-50%);
-  width:min(calc(100% - 2.5rem), 72rem);
+  position:fixed; inset:0;
   z-index:-1; pointer-events:none;
   background:rgba(14,35,55,.46);
   -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
-  -webkit-mask-image:linear-gradient(to right, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
-  mask-image:linear-gradient(to right, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
+  /* Full-width scrim with a soft, wide horizontal falloff: opaque over the content
+     column, then the blur+tint fade gradually across the margins so the clouds ease
+     back in toward the left/right screen edges with no hard seam. */
+  -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  mask-image:linear-gradient(to right, transparent 0%, #000 20%, #000 80%, transparent 100%);
 }
 
 .wrap{max-width:72rem; margin:0 auto; padding-inline:clamp(1.25rem,4vw,3rem)}
