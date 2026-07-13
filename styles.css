@@ -112,9 +112,9 @@ img{max-width:100%}
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   opacity:.06; mix-blend-mode:overlay;
 }
-/* Smaller screens have little margin, so the scrim's core sits close to the text edges and
-   reads lighter over the clouds — darken the tint there so the white text stays clean. */
-@media (max-width:720px){ #reading-column{ background:rgba(14,35,55,.62) } }
+/* Smaller screens have little margin, and the feathered edge rendered oddly on mobile, so
+   drop the feather (full-width, uniform scrim) and darken the tint a touch for clean text. */
+@media (max-width:720px){ #reading-column{ background:rgba(14,35,55,.62); -webkit-mask-image:none; mask-image:none } }
 
 .wrap{max-width:72rem; margin:0 auto; padding-inline:clamp(1.25rem,4vw,3rem)}
 
