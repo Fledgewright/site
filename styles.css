@@ -315,7 +315,7 @@ h1 .you{
   .hero{grid-template-columns:1fr; padding-top:3.5rem; position:relative; isolation:isolate}
   .hero-art{
     position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-    width:min(440px,96vw); opacity:.15; z-index:-1;
+    width:min(440px,96vw); opacity:.5; z-index:-1;   /* clouds are on now; keep the swift visible */
   }
   .hero-art svg{opacity:1} /* the layer opacity carries the dimming on mobile */
   .hero-art svg path{animation:none} /* no motion behind the mobile headline */
