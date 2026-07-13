@@ -14,11 +14,6 @@
   var fallback = document.querySelector('.sky-near');
   if (!host || !fallback) return;
 
-  // 2026-07-13 TRIAL: clouds ON for touch devices too, to gauge mobile performance.
-  // Restore these two lines (and the still() freeze + the CSS hide) to turn them back off.
-  // var touchMq = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)');
-  // if (touchMq && touchMq.matches) return;
-
   var canvas = document.createElement('canvas');
   canvas.id = 'sky-morph';
   host.insertBefore(canvas, fallback);
@@ -191,13 +186,11 @@
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 
-  // --- run/pause discipline (mobile + reduced motion stay static) ---
+  // --- run/pause discipline (only reduced motion stays static) ---
   var raf = null, running = false, onScreen = true;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-  // freeze only on true touch devices, not on any narrow desktop window
-  var small = window.matchMedia && window.matchMedia('(max-width: 720px) and (pointer: coarse)');
-  // 2026-07-13 TRIAL: mobile animates like desktop (restore `|| (small && small.matches)` to freeze)
-  function still() { return (reduce && reduce.matches); }
+  // clouds run on all devices; only reduced-motion pauses to a single static frame
+  function still() { return reduce && reduce.matches; }
   function frame(t) { draw(t); raf = requestAnimationFrame(frame); }
   function start() {
     if (running || still() || document.hidden || !onScreen) return;
@@ -211,7 +204,5 @@
       onScreen = e[0].isIntersecting; onScreen ? start() : stop();
     }).observe(canvas);
   }
-  [reduce, small].forEach(function (mq) {
-    if (mq) mq.addEventListener('change', function () { still() ? (stop(), draw(0)) : start(); });
-  });
+  if (reduce) reduce.addEventListener('change', function () { still() ? (stop(), draw(0)) : start(); });
 })();

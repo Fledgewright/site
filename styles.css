@@ -84,10 +84,7 @@ img{max-width:100%}
   background-size:1560px 1560px; animation:sky-drift-near 380s linear infinite}
 @keyframes sky-drift-far{to{transform:translate3d(-1126px,0,0)}}
 @keyframes sky-drift-near{to{transform:translate3d(-1560px,0,0)}}
-/* 2026-07-13 TRIAL: clouds + scrim ON for touch devices too (fully animated like desktop),
-   to gauge mobile performance. To turn them back off, restore this rule:
-   @media (hover:none) and (pointer:coarse){ .sky-layer, #reading-column{display:none} }
-   and the matching early-return + still() freeze in sky-morph.js. */
+/* The living sky runs on all devices, touch included (mobile clouds kept 2026-07-13). */
 
 /* Reading-column scrim: a faint frosted sheet the width of the content column that
    blurs the sky behind text so the drifting clouds settle where you read, while
