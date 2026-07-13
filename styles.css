@@ -269,7 +269,7 @@ h1 .you{
 .contact-art{
   position:absolute; right:0; top:50%; transform:translateY(-50%);
   height:min(96%, 640px); aspect-ratio:1638/1024;
-  opacity:.15; pointer-events:none; z-index:-1;
+  opacity:.5; pointer-events:none; z-index:-1;
 }
 .contact-art img{position:absolute; right:0; top:0; height:100%; width:auto}
 .contact-art svg{position:absolute; inset:0; width:100%; height:100%}
